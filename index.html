@@ -3,75 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vanta - Mine VANTA</title>
+<title>Vanta Bot Hub - Mine VANTA</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 <script src='//libtl.com/sdk.js' data-zone='11874733' data-sdk='show_11874733'></script>
-<style>body{padding-bottom:90px; background:#0f0f0f; color:white}</style>
+<style>
+body{
+  padding-bottom:90px; 
+  background: linear-gradient(180deg, #0088CC 0%, #0096D6 50%, #00A8E8 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color:white
+}
+</style>
 </head>
 <body class="p-4">
 <div class="max-w-md mx-auto">
 
 <div id="mine-page">
-  <div class="bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl p-5 mb-4">
-    <p class="text-xs opacity-80">Vanta • @Vanta23bot</p>
-    <p class="text-white/80 text-sm mt-2">Vanta Balance</p>
+  <div class="text-center mb-4">
+    <img src="logo.png" class="w-28 h-28 mx-auto rounded-full border-2 border-white/30 shadow-lg bg-white/10">
+    <p class="text-xs opacity-80 mt-2">Vanta Bot Hub • @Vanta23bot</p>
+  </div>
+  <div class="bg-white/15 backdrop-blur rounded-2xl p-5 mb-4 border border-white/20">
+    <p class="text-white/80 text-sm">Vanta Balance - Points will convert at TGE</p>
     <h1 class="text-3xl font-bold"><span id="balance">0.00</span> VANTA</h1>
     <p class="text-xs mt-1">$<span id="usd">0.00</span></p>
-    <div class="mt-3 bg-white/20 rounded-full p-2 flex justify-between text-xs">
+    <div class="mt-3 bg-black/20 rounded-full p-2 flex justify-between text-xs">
       <span>Power: <b id="power">1.0</b> /h</span>
-      <span>⛏️ Mining</span>
+      <span>⛏️ Mining Active</span>
     </div>
   </div>
-  <button onclick="addPower()" class="w-full bg-white text-black font-bold py-3 rounded-xl mb-2">⚡ ADD POWER (+0.1) - WATCH AD</button>
-  <button onclick="claim()" class="w-full bg-yellow-400 text-black font-bold py-3 rounded-xl mb-3">✅ CLAIM & WATCH AD</button>
-  <div class="bg-zinc-900 rounded-xl p-4 flex justify-between items-center">
-    <span>Wallet</span>
-    <button onclick="connectWallet()" class="bg-white text-black px-3 py-1 rounded-lg text-sm">Connect</button>
+  <button onclick="addPower()" class="w-full bg-white text-[#0088CC] font-bold py-3 rounded-xl mb-2">⚡ ADD POWER (+0.1) - WATCH AD</button>
+  <button onclick="claim()" class="w-full bg-black text-white font-bold py-3 rounded-xl mb-3">✅ CLAIM & WATCH AD</button>
+  <div class="bg-white/15 backdrop-blur rounded-xl p-4 border border-white/20">
+    <p class="text-sm mb-3 text-center">Connect TON Wallet for Airdrop</p>
+    <div id="ton-connect" class="flex justify-center"></div>
+    <p id="walletAddr" class="text-xs text-white/70 mt-2 text-center break-all"></p>
   </div>
-  <p id="walletAddr" class="text-xs text-gray-400 mt-2 text-center"></p>
 </div>
 
 <div id="tasks-page" class="hidden">
   <h2 class="text-xl font-bold mb-4">✅ Vanta Tasks</h2>
-  <div class="bg-zinc-900 rounded-xl p-4 mb-2 flex justify-between items-center"><span>Join Channel</span><button onclick="joinTask(5, 'https://t.me/VantaBotHub')" class="bg-purple-600 px-3 py-1 rounded-lg">+5</button></div>
-  <div class="bg-zinc-900 rounded-xl p-4 mb-2 flex justify-between items-center" style="border: 1px solid #a855f7;"><span>👥 Join Vanta Group</span><button onclick="joinTask(10, 'https://t.me/VantaBotHub')" class="bg-purple-600 px-3 py-1 rounded-lg font-bold">+10</button></div>
-  <div class="bg-zinc-900 rounded-xl p-4 mb-2 flex justify-between items-center"><span>Follow X</span><button onclick="joinTask(5, 'https://x.com/')" class="bg-purple-600 px-3 py-1 rounded-lg">+5</button></div>
-  <div class="bg-zinc-900 rounded-xl p-4 flex justify-between items-center"><span>Watch Ad</span><button onclick="watchAd(2)" class="bg-yellow-400 text-black px-3 py-1 rounded-lg">+2</button></div>
+  <div class="bg-white/15 rounded-xl p-4 mb-2 flex justify-between"><span>Join Vanta Channel</span><button onclick="doTask(5)" class="bg-white text-[#0088CC] px-3 py-1 rounded-lg font-bold">+5</button></div>
+  <div class="bg-white/15 rounded-xl p-4 mb-2 flex justify-between"><span>Follow X</span><button onclick="doTask(5)" class="bg-white text-[#0088CC] px-3 py-1 rounded-lg font-bold">+5</button></div>
+  <div class="bg-white/15 rounded-xl p-4 flex justify-between"><span>Watch Ad (+2)</span><button onclick="watchAd(2)" class="bg-black text-white px-3 py-1 rounded-lg">+2</button></div>
 </div>
 
 <div id="ref-page" class="hidden">
   <h2 class="text-xl font-bold mb-4">👥 Referral - Earn 100 VANTA</h2>
-  <div class="bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl p-4 mb-4 text-center">
-    <p class="text-2xl font-bold">🎁 100 VANTA</p>
-    <p class="text-sm">Per Friend You Invite!</p>
+  <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl p-5 text-center mb-4">
+    <p class="text-3xl">🎁 100 VANTA</p>
+    <p class="text-sm opacity-90">Per Friend You Invite!</p>
   </div>
-  <div class="bg-zinc-900 rounded-xl p-4 mb-4">
-    <p class="text-sm text-gray-400">Your Invite Link:</p>
-    <p id="refLink" class="text-xs break-all mt-2 text-purple-400"></p>
-    <button onclick="copyRef()" class="w-full bg-white text-black mt-3 py-2 rounded-xl font-bold">Copy & Share</button>
+  <div class="bg-white/15 rounded-xl p-4 mb-4">
+    <p class="text-sm text-white/70">Your Invite Link:</p>
+    <p id="refLink" class="text-xs break-all mt-2 text-white font-mono bg-black/20 p-2 rounded"></p>
+    <button onclick="copyRef()" class="w-full bg-white text-[#0088CC] mt-3 py-2 rounded-xl font-bold">Copy & Share</button>
   </div>
-  <div class="bg-zinc-900 rounded-xl p-4 text-center">
-    <p class="text-sm text-gray-400">Total Referral Earned</p>
-    <p class="text-xl font-bold text-yellow-400"><span id="refEarned">0</span> VANTA</p>
+  <div class="bg-white/15 rounded-xl p-4 text-center mb-4">
+    <p class="text-2xl font-bold" id="refCount">0</p>
+    <p class="text-sm text-white/70">Friends Invited</p>
+    <p class="mt-2 text-sm">Total Earned: <b id="refEarned" class="text-yellow-300">0 VANTA</b></p>
   </div>
-  <button onclick="claimRefBonus()" class="w-full bg-yellow-400 text-black font-bold py-3 rounded-xl mt-3">💰 CLAIM 100 BONUS (Watch Ad)</button>
+  <button id="claimRefBtn" onclick="claimReferral()" class="w-full bg-yellow-400 text-black font-bold py-3 rounded-xl">💰 CLAIM BONUS (Watch Ad)</button>
+  <div id="refList" class="mt-4 text-xs opacity-70"></div>
 </div>
 
 <div id="withdraw-page" class="hidden">
   <h2 class="text-xl font-bold mb-4">💳 Withdraw VANTA</h2>
-  <div class="bg-zinc-900 rounded-xl p-4">
+  <div class="bg-white/15 rounded-xl p-4">
     <p class="text-sm">Balance: <span id="bal2">0.00</span> VANTA</p>
-    <p class="text-xs text-yellow-400 mt-1 font-bold">Min: 500 VANTA | Gas Fee: 20 VANTA</p>
-    <p class="text-xs text-gray-400 mt-1">You will receive: 480 VANTA</p>
-    <input id="walletInput" type="text" placeholder="Paste your wallet address" class="w-full mt-3 p-3 rounded-xl bg-black border border-zinc-700">
-    <button onclick="withdraw()" class="w-full bg-purple-600 mt-3 py-3 rounded-xl font-bold">Withdraw 480 VANTA</button>
-    <p class="text-[10px] text-gray-500 mt-2 text-center">20 VANTA is gas fee. Must watch Ad to withdraw.</p>
+    <p class="text-xs text-white/70 mt-1">Min: 10 - Will convert at TGE</p>
+    <input id="withdrawAmt" type="number" placeholder="Amount" class="w-full mt-3 p-3 rounded-xl bg-black/20 border border-white/20 text-white placeholder:text-white/50">
+    <button onclick="withdraw()" class="w-full bg-white text-[#0088CC] mt-3 py-3 rounded-xl font-bold">Withdraw</button>
   </div>
 </div>
 
 </div>
 
-<div class="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 flex justify-around p-2 max-w-md mx-auto">
+<div class="fixed bottom-0 left-0 right-0 bg-[#0088CC] border-t border-white/20 flex justify-around p-2 max-w-md mx-auto">
   <button onclick="showPage('mine')">⛏️<br><span class="text-xs">Mine</span></button>
   <button onclick="showPage('tasks')">✅<br><span class="text-xs">Tasks</span></button>
   <button onclick="showPage('ref')">👥<br><span class="text-xs">Ref</span></button>
@@ -79,10 +90,44 @@
 </div>
 
 <script>
+const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+  manifestUrl: 'https://raw.githubusercontent.com/ton-community/tutorials/main/03-client/test/public/tonconnect-manifest.json',
+  buttonRootId: 'ton-connect'
+});
+tonConnectUI.onStatusChange(wallet => {
+  if(wallet){
+    document.getElementById('walletAddr').innerText = wallet.account.address;
+    localStorage.setItem('v_wallet', wallet.account.address);
+  }
+});
+
 let balance = parseFloat(localStorage.getItem('v_balance')||'0');
 let power = parseFloat(localStorage.getItem('v_power')||'1.0');
-let refEarned = parseFloat(localStorage.getItem('v_refEarned')||'0');
-let tgId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || new URLSearchParams(location.search).get('ref') || '123';
+
+// === NEW REFERRAL SYSTEM ===
+let urlParams = new URLSearchParams(window.location.search);
+let refFromLink = urlParams.get('start') || urlParams.get('ref');
+let tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+let tgId = tgUser?.id?.toString() || localStorage.getItem('v_tgId') || 'id_' + Math.floor(Math.random()*10000000);
+localStorage.setItem('v_tgId', tgId);
+
+// If someone joins via referral link, record it for the referrer (same device demo)
+if(refFromLink && refFromLink !== tgId){
+  let referrerKey = 'refs_of_' + refFromLink;
+  let list = JSON.parse(localStorage.getItem(referrerKey) || '[]');
+  if(!list.includes(tgId)){
+    list.push(tgId);
+    localStorage.setItem(referrerKey, JSON.stringify(list));
+  }
+  // Save who invited you
+  if(!localStorage.getItem('v_invited_by')){
+    localStorage.setItem('v_invited_by', refFromLink);
+  }
+}
+
+let myRefKey = 'refs_of_' + tgId;
+let refClaimed = parseInt(localStorage.getItem('v_ref_claimed') || '0');
+
 document.getElementById('refLink').innerText = 'https://t.me/Vanta23bot?start=' + tgId;
 
 function updateUI(){
@@ -90,38 +135,65 @@ function updateUI(){
   document.getElementById('bal2').innerText = balance.toFixed(2);
   document.getElementById('power').innerText = power.toFixed(1);
   document.getElementById('usd').innerText = (balance*0.0021).toFixed(4);
-  document.getElementById('refEarned').innerText = refEarned;
 }
+
+function updateRefUI(){
+  let myReferrals = JSON.parse(localStorage.getItem(myRefKey) || '[]');
+  let count = myReferrals.length;
+  let totalEarned = count * 100;
+  document.getElementById('refCount').innerText = count;
+  document.getElementById('refEarned').innerText = totalEarned + ' VANTA';
+  
+  let unclaimed = totalEarned - refClaimed;
+  let btn = document.getElementById('claimRefBtn');
+  if(unclaimed > 0){
+    btn.innerText = `💰 CLAIM ${unclaimed} BONUS (Watch Ad)`;
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  } else {
+    btn.innerText = count === 0 ? 'Invite friends to earn bonus' : 'All bonus claimed';
+    btn.disabled = count === 0;
+    btn.style.opacity = count === 0 ? '0.5' : '1';
+  }
+}
+
 function showPage(p){
   ['mine','tasks','ref','withdraw'].forEach(x=>document.getElementById(x+'-page').classList.add('hidden'));
   document.getElementById(p+'-page').classList.remove('hidden');
+  if(p==='ref') updateRefUI();
 }
+
 function addPower(){ show_11874733().then(()=>{ power+=0.1; localStorage.setItem('v_power',power); updateUI(); }); }
 function claim(){ show_11874733().then(()=>{ let e=power*0.1; balance+=e; localStorage.setItem('v_balance',balance); updateUI(); }); }
-function watchAd(a){ show_11874733().then(()=>{ balance+=a; localStorage.setItem('v_balance',balance); updateUI(); }); }
-function joinTask(amt, link){ window.open(link, '_blank'); setTimeout(()=>{ balance+=amt; localStorage.setItem('v_balance',balance); updateUI(); },1500); }
-function claimRefBonus(){ show_11874733().then(()=>{ balance+=100; refEarned+=100; localStorage.setItem('v_balance',balance); localStorage.setItem('v_refEarned',refEarned); updateUI(); alert('🎉 +100 VANTA referral bonus!'); }); }
-function connectWallet(){ let a=prompt('Enter wallet:'); if(a){localStorage.setItem('v_wallet',a); document.getElementById('walletAddr').innerText=a;} }
-function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert('Copied! Share to earn 100 VANTA!'); }
+function watchAd(a){ show_11874733('pop').then(()=>{ balance+=a; localStorage.setItem('v_balance',balance); updateUI(); }); }
+function doTask(a){ balance+=a; localStorage.setItem('v_balance',balance); updateUI(); alert('+'+a+' VANTA added!'); }
+function copyRef(){ navigator.clipboard.writeText(document.getElementById('refLink').innerText); alert('Copied!'); }
 
-function withdraw(){
-  let wallet = document.getElementById('walletInput').value;
-  if(!wallet){ alert('Please enter wallet address!'); return; }
-  if(balance < 500){ alert('You need minimum 500 VANTA! Balance: ' + balance.toFixed(2)); return; }
+function claimReferral(){
+  let myReferrals = JSON.parse(localStorage.getItem(myRefKey) || '[]');
+  let totalEarned = myReferrals.length * 100;
+  let unclaimed = totalEarned - refClaimed;
+  if(unclaimed <=0){
+    alert(myReferrals.length===0 ? 'You never invite anybody yet! Share your link.' : 'You don claim all bonus already!');
+    return;
+  }
   show_11874733().then(()=>{
-    balance -= 500;
+    balance += unclaimed;
+    refClaimed += unclaimed;
     localStorage.setItem('v_balance', balance);
+    localStorage.setItem('v_ref_claimed', refClaimed.toString());
     updateUI();
-    let requests = JSON.parse(localStorage.getItem('v_withdraws') || '[]');
-    requests.push({wallet: wallet, amount: 480, fee: 20, total: 500, date: new Date().toLocaleString()});
-    localStorage.setItem('v_withdraws', JSON.stringify(requests));
-    alert('✅ Withdraw Success!\n\nTotal: 500\nFee: 20\nYou receive: 480 VANTA\nWallet: '+wallet+'\n\nWill be sent within 24hrs!');
-    document.getElementById('walletInput').value = '';
+    updateRefUI();
+    alert(`+${unclaimed} VANTA referral bonus claimed!`);
   });
 }
 
+function withdraw(){ let v=parseFloat(document.getElementById('withdrawAmt').value); if(v>=10 && v<=balance){ balance-=v; localStorage.setItem('v_balance',balance); updateUI(); alert('Vanta withdraw request: '+v); } else alert('Min 10'); }
+
 setInterval(()=>{ balance+=power/3600; localStorage.setItem('v_balance',balance); updateUI(); },1000);
 updateUI();
+updateRefUI();
+if(localStorage.getItem('v_wallet')){ document.getElementById('walletAddr').innerText = localStorage.getItem('v_wallet'); }
 </script>
 </body>
-  </html>
+      </html>
